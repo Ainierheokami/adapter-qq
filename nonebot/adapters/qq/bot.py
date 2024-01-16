@@ -242,6 +242,7 @@ class Bot(BaseBot):
                     "appId": self.bot_info.id,
                     "clientSecret": self.bot_info.secret,
                 },
+                proxy=self.bot_info.proxy,
             )
             resp = await self.adapter.request(request)
             if resp.status_code != 200 or not resp.content:
@@ -577,6 +578,7 @@ class Bot(BaseBot):
         request = Request(
             "GET",
             self.adapter.get_api_base().joinpath("users/@me"),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(User, await self._request(request))
 
@@ -592,6 +594,7 @@ class Bot(BaseBot):
             "GET",
             self.adapter.get_api_base().joinpath("users", "@me", "guilds"),
             params=exclude_none({"before": before, "after": after, "limit": limit}),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(List[Guild], await self._request(request))
 
@@ -601,6 +604,7 @@ class Bot(BaseBot):
         request = Request(
             "GET",
             self.adapter.get_api_base().joinpath("guilds", guild_id),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(Guild, await self._request(request))
 
@@ -610,6 +614,7 @@ class Bot(BaseBot):
         request = Request(
             "GET",
             self.adapter.get_api_base().joinpath("guilds", guild_id, "channels"),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(List[Channel], await self._request(request))
 
@@ -618,6 +623,7 @@ class Bot(BaseBot):
         request = Request(
             "GET",
             self.adapter.get_api_base().joinpath("channels", channel_id),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(Channel, await self._request(request))
 
@@ -652,6 +658,7 @@ class Bot(BaseBot):
                     "application_id": application_id,
                 }
             ),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(List[Channel], await self._request(request))
 
@@ -684,6 +691,7 @@ class Bot(BaseBot):
                     "application_id": application_id,
                 }
             ),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(Channel, await self._request(request))
 
@@ -692,6 +700,7 @@ class Bot(BaseBot):
         request = Request(
             "DELETE",
             self.adapter.get_api_base().joinpath("channels", channel_id),
+            proxy=self.bot_info.proxy,
         )
         return await self._request(request)
 
@@ -708,6 +717,7 @@ class Bot(BaseBot):
             "GET",
             self.adapter.get_api_base().joinpath("guilds", guild_id, "members"),
             params=exclude_none({"after": after, "limit": limit}),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(List[Member], await self._request(request))
 
@@ -726,6 +736,7 @@ class Bot(BaseBot):
                 "guilds", guild_id, "roles", role_id, "members"
             ),
             params=exclude_none({"start_index": start_index, "limit": limit}),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(GetRoleMembersReturn, await self._request(request))
 
@@ -736,6 +747,7 @@ class Bot(BaseBot):
             self.adapter.get_api_base().joinpath(
                 "guilds", guild_id, "members", user_id
             ),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(Member, await self._request(request))
 
@@ -759,6 +771,7 @@ class Bot(BaseBot):
                     "delete_history_msg_days": delete_history_msg_days,
                 }
             ),
+            proxy=self.bot_info.proxy,
         )
         return await self._request(request)
 
@@ -768,6 +781,7 @@ class Bot(BaseBot):
         request = Request(
             "GET",
             self.adapter.get_api_base().joinpath("guilds", guild_id, "roles"),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(GetGuildRolesReturn, await self._request(request))
 
@@ -790,6 +804,7 @@ class Bot(BaseBot):
                     "hoist": int(hoist) if hoist is not None else None,
                 }
             ),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(PostGuildRoleReturn, await self._request(request))
 
@@ -813,6 +828,7 @@ class Bot(BaseBot):
                     "hoist": int(hoist) if hoist is not None else None,
                 }
             ),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(PatchGuildRoleReturn, await self._request(request))
 
@@ -821,6 +837,7 @@ class Bot(BaseBot):
         request = Request(
             "DELETE",
             self.adapter.get_api_base().joinpath("guilds", guild_id, "roles", role_id),
+            proxy=self.bot_info.proxy,
         )
         return await self._request(request)
 
@@ -839,6 +856,7 @@ class Bot(BaseBot):
                 "guilds", guild_id, "members", user_id, "roles", role_id
             ),
             json={"channel": {"id": channel_id}} if channel_id is not None else None,
+            proxy=self.bot_info.proxy,
         )
         return await self._request(request)
 
@@ -857,6 +875,7 @@ class Bot(BaseBot):
                 "guilds", guild_id, "members", user_id, "roles", role_id
             ),
             json={"channel": {"id": channel_id}} if channel_id is not None else None,
+            proxy=self.bot_info.proxy,
         )
         return await self._request(request)
 
@@ -870,6 +889,7 @@ class Bot(BaseBot):
             self.adapter.get_api_base().joinpath(
                 "channels", channel_id, "members", user_id, "permissions"
             ),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(ChannelPermissions, await self._request(request))
 
@@ -888,6 +908,7 @@ class Bot(BaseBot):
                 "channels", channel_id, "members", user_id, "permissions"
             ),
             json=exclude_none({"add": str(add), "remove": str(remove)}),
+            proxy=self.bot_info.proxy,
         )
         return await self._request(request)
 
@@ -900,6 +921,7 @@ class Bot(BaseBot):
             self.adapter.get_api_base().joinpath(
                 "channels", channel_id, "roles", role_id, "permissions"
             ),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(ChannelPermissions, await self._request(request))
 
@@ -918,6 +940,7 @@ class Bot(BaseBot):
                 "channels", channel_id, "roles", role_id, "permissions"
             ),
             json=exclude_none({"add": str(add), "remove": str(remove)}),
+            proxy=self.bot_info.proxy,
         )
         return await self._request(request)
 
@@ -931,6 +954,7 @@ class Bot(BaseBot):
             self.adapter.get_api_base().joinpath(
                 "channels", channel_id, "messages", message_id
             ),
+            proxy=self.bot_info.proxy,
         )
         result = await self._request(request)
         if isinstance(result, dict) and "message" in result:
@@ -997,6 +1021,7 @@ class Bot(BaseBot):
         request = Request(
             "POST",
             self.adapter.get_api_base().joinpath("channels", channel_id, "messages"),
+            proxy=self.bot_info.proxy,
             **params,
         )
         return parse_obj_as(GuildMessage, await self._request(request))
@@ -1015,6 +1040,7 @@ class Bot(BaseBot):
                 "channels", channel_id, "messages", message_id
             ),
             params={"hidetip": str(hidetip).lower()} if hidetip is not None else None,
+            proxy=self.bot_info.proxy,
         )
         return await self._request(request)
 
@@ -1026,6 +1052,7 @@ class Bot(BaseBot):
             self.adapter.get_api_base().joinpath(
                 "guilds", guild_id, "message", "setting"
             ),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(MessageSetting, await self._request(request))
 
@@ -1038,6 +1065,7 @@ class Bot(BaseBot):
             json=exclude_none(
                 {"recipient_id": recipient_id, "source_guild_id": source_guild_id}
             ),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(DMS, await self._request(request))
 
@@ -1074,6 +1102,7 @@ class Bot(BaseBot):
         request = Request(
             "POST",
             self.adapter.get_api_base().joinpath("dms", guild_id, "messages"),
+            proxy=self.bot_info.proxy,
             **params,
         )
         return parse_obj_as(GuildMessage, await self._request(request))
@@ -1088,6 +1117,7 @@ class Bot(BaseBot):
                 "dms", guild_id, "messages", message_id
             ),
             params={"hidetip": str(hidetip).lower()} if hidetip is not None else None,
+            proxy=self.bot_info.proxy,
         )
         return await self._request(request)
 
@@ -1115,6 +1145,7 @@ class Bot(BaseBot):
                     "mute_seconds": str(mute_seconds),
                 }
             ),
+            proxy=self.bot_info.proxy,
         )
         return await self._request(request)
 
@@ -1144,6 +1175,7 @@ class Bot(BaseBot):
                     "mute_seconds": str(mute_seconds),
                 }
             ),
+            proxy=self.bot_info.proxy,
         )
         return await self._request(request)
 
@@ -1172,6 +1204,7 @@ class Bot(BaseBot):
                     "mute_seconds": str(mute_seconds),
                 }
             ),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(List[int], await self._request(request))
 
@@ -1201,6 +1234,7 @@ class Bot(BaseBot):
                     ),
                 }
             ),
+            proxy=self.bot_info.proxy,
         )
         return await self._request(request)
 
@@ -1211,6 +1245,7 @@ class Bot(BaseBot):
             self.adapter.get_api_base().joinpath(
                 "guilds", guild_id, "announces", message_id
             ),
+            proxy=self.bot_info.proxy,
         )
         return await self._request(request)
 
@@ -1224,6 +1259,7 @@ class Bot(BaseBot):
             self.adapter.get_api_base().joinpath(
                 "channels", channel_id, "pins", message_id
             ),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(PinsMessage, await self._request(request))
 
@@ -1234,6 +1270,7 @@ class Bot(BaseBot):
             self.adapter.get_api_base().joinpath(
                 "channels", channel_id, "pins", message_id
             ),
+            proxy=self.bot_info.proxy,
         )
         return await self._request(request)
 
@@ -1242,6 +1279,7 @@ class Bot(BaseBot):
         request = Request(
             "GET",
             self.adapter.get_api_base().joinpath("channels", channel_id, "pins"),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(PinsMessage, await self._request(request))
 
@@ -1257,6 +1295,7 @@ class Bot(BaseBot):
             "GET",
             self.adapter.get_api_base() / f"channels/{channel_id}/schedules",
             json=exclude_none({"since": since}),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(List[Schedule], await self._request(request))
 
@@ -1267,6 +1306,7 @@ class Bot(BaseBot):
             self.adapter.get_api_base().joinpath(
                 "channels", channel_id, "schedules", schedule_id
             ),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(Schedule, await self._request(request))
 
@@ -1307,6 +1347,7 @@ class Bot(BaseBot):
                     }
                 )
             },
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(Schedule, await self._request(request))
 
@@ -1352,6 +1393,7 @@ class Bot(BaseBot):
                     }
                 )
             },
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(Schedule, await self._request(request))
 
@@ -1362,6 +1404,7 @@ class Bot(BaseBot):
             self.adapter.get_api_base().joinpath(
                 "channels", channel_id, "schedules", schedule_id
             ),
+            proxy=self.bot_info.proxy,
         )
         return await self._request(request)
 
@@ -1380,6 +1423,7 @@ class Bot(BaseBot):
                 str(type),
                 id,
             ),
+            proxy=self.bot_info.proxy,
         )
         return await self._request(request)
 
@@ -1398,6 +1442,7 @@ class Bot(BaseBot):
                 str(type),
                 id,
             ),
+            proxy=self.bot_info.proxy,
         )
         return await self._request(request)
 
@@ -1424,6 +1469,7 @@ class Bot(BaseBot):
                 id,
             ),
             params=exclude_none({"cookie": cookie, "limit": limit}),
+            proxy=self.bot_info.proxy,
         )
         return await self._request(request)
 
@@ -1443,6 +1489,7 @@ class Bot(BaseBot):
             json=AudioControl(audio_url=audio_url, text=text, status=status).dict(
                 exclude_none=True
             ),
+            proxy=self.bot_info.proxy,
         )
         return await self._request(request)
 
@@ -1451,6 +1498,7 @@ class Bot(BaseBot):
         request = Request(
             "PUT",
             self.adapter.get_api_base().joinpath("channels", channel_id, "mic"),
+            proxy=self.bot_info.proxy,
         )
         return await self._request(request)
 
@@ -1459,6 +1507,7 @@ class Bot(BaseBot):
         request = Request(
             "DELETE",
             self.adapter.get_api_base().joinpath("channels", channel_id, "mic"),
+            proxy=self.bot_info.proxy,
         )
         return await self._request(request)
 
@@ -1468,6 +1517,7 @@ class Bot(BaseBot):
         request = Request(
             "GET",
             self.adapter.get_api_base().joinpath("channels", channel_id, "threads"),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(GetThreadsListReturn, await self._request(request))
 
@@ -1478,6 +1528,7 @@ class Bot(BaseBot):
             self.adapter.get_api_base().joinpath(
                 "channels", channel_id, "threads", thread_id
             ),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(GetThreadReturn, await self._request(request))
 
@@ -1526,6 +1577,7 @@ class Bot(BaseBot):
                     "format": format,
                 }
             ),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(PutThreadReturn, await self._request(request))
 
@@ -1536,6 +1588,7 @@ class Bot(BaseBot):
             self.adapter.get_api_base().joinpath(
                 "channels", channel_id, "threads", thread_id
             ),
+            proxy=self.bot_info.proxy,
         )
         return await self._request(request)
 
@@ -1547,6 +1600,7 @@ class Bot(BaseBot):
         request = Request(
             "GET",
             self.adapter.get_api_base().joinpath("guilds", guild_id, "api_permission"),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(GetGuildAPIPermissionReturn, await self._request(request))
 
@@ -1571,6 +1625,7 @@ class Bot(BaseBot):
                     "desc": desc,
                 }
             ),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(APIPermissionDemand, await self._request(request))
 
@@ -1580,6 +1635,7 @@ class Bot(BaseBot):
         request = Request(
             "GET",
             self.adapter.get_api_base().joinpath("gateway"),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(UrlGetReturn, await self._request(request))
 
@@ -1588,6 +1644,7 @@ class Bot(BaseBot):
         request = Request(
             "GET",
             self.adapter.get_api_base().joinpath("gateway", "bot"),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(ShardUrlGetReturn, await self._request(request))
 
@@ -1600,6 +1657,7 @@ class Bot(BaseBot):
             "PUT",
             self.adapter.get_api_base().joinpath("interactions", interaction_id),
             json={"code": code},
+            proxy=self.bot_info.proxy,
         )
         return await self._request(request)
 
@@ -1664,6 +1722,7 @@ class Bot(BaseBot):
                     "timestamp": timestamp,
                 }
             ),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(PostC2CMessagesReturn, await self._request(request))
 
@@ -1688,6 +1747,7 @@ class Bot(BaseBot):
                     "file_data": file_data,
                 }
             ),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(PostC2CFilesReturn, await self._request(request))
 
@@ -1754,6 +1814,7 @@ class Bot(BaseBot):
                     "timestamp": timestamp,
                 }
             ),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(PostGroupMessagesReturn, await self._request(request))
 
@@ -1778,6 +1839,7 @@ class Bot(BaseBot):
                     "file_data": file_data,
                 }
             ),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(PostGroupFilesReturn, await self._request(request))
 
@@ -1793,5 +1855,6 @@ class Bot(BaseBot):
             "POST",
             self.adapter.get_api_base().joinpath("v2", "groups", group_id, "members"),
             json=exclude_none({"limit": limit, "start_index": start_index}),
+            proxy=self.bot_info.proxy,
         )
         return parse_obj_as(PostGroupMembersReturn, await self._request(request))
