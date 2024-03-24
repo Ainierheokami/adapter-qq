@@ -1733,8 +1733,8 @@ class Bot(BaseBot):
         openid: str,
         file_type: Literal[1, 2, 3, 4],
         url: str,
-        srv_send_msg: bool = True,
-        file_data: None = None,
+        srv_send_msg: bool = False, # False: 被动消息
+        file_data: Optional[str] = None,
     ) -> PostC2CFilesReturn:
         request = Request(
             "POST",
@@ -1825,8 +1825,8 @@ class Bot(BaseBot):
         group_openid: str,
         file_type: Literal[1, 2, 3, 4],
         url: str,
-        srv_send_msg: bool = True,
-        file_data: None = None,
+        srv_send_msg: bool = False, # False: 被动消息
+        file_data:  Optional[str] = None,
     ) -> PostGroupFilesReturn:
         request = Request(
             "POST",
