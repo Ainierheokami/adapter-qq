@@ -2,7 +2,9 @@ from datetime import datetime
 from typing import List, Optional
 from urllib.parse import urlparse
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel
+
+from nonebot.adapters.qq.compat import field_validator
 
 
 class FriendAuthor(BaseModel):
@@ -18,12 +20,12 @@ class GroupMemberAuthor(BaseModel):
 class Attachment(BaseModel):
     content_type: str
     filename: Optional[str] = None
-    height: Optional[str] = None
-    width: Optional[str] = None
-    size: Optional[str] = None
+    height: Optional[int] = None
+    width: Optional[int] = None
+    size: Optional[int] = None
     url: Optional[str] = None
 
-    @validator("url", allow_reuse=True)
+    @field_validator("url", mode="after")
     def check_url(cls, v: str):
         if v and not urlparse(v).hostname:
             return f"https://{v}"

@@ -1,11 +1,19 @@
+import json
 from enum import IntEnum
 from datetime import datetime
 from typing import List, Union, Generic, TypeVar, Optional
 
-from pydantic.generics import GenericModel
-from pydantic import BaseModel, validator, root_validator
+from pydantic import BaseModel
+from nonebot.compat import PYDANTIC_V2, model_fields, type_validate_python
+
+from nonebot.adapters.qq.compat import field_validator, model_validator
 
 from .common import MessageArk, MessageEmbed, MessageReference, MessageAttachment
+
+if PYDANTIC_V2:
+    GenericModel = BaseModel
+else:
+    from pydantic.generics import GenericModel
 
 T = TypeVar("T")
 
@@ -329,7 +337,8 @@ class Elem(BaseModel):
     video: Optional[VideoElem] = None
     url: Optional[URLElem] = None
 
-    @root_validator(pre=True, allow_reuse=True)
+    @model_validator(mode="before")
+    @classmethod
     def infer_type(cls, values: dict):
         if values.get("type") is not None:
             return values
@@ -373,10 +382,11 @@ class ThreadObjectInfo(BaseModel):
     content: RichText
     date_time: datetime
 
-    @validator("content", pre=True, allow_reuse=True)
+    @field_validator("content", mode="before")
+    @classmethod
     def parse_content(cls, v):
         if isinstance(v, str):
-            return RichText.parse_raw(v, content_type="json")
+            return type_validate_python(RichText, json.loads(v))
         return v
 
 
@@ -387,10 +397,15 @@ class ThreadInfo(ThreadObjectInfo, GenericModel, Generic[_T_Title]):
     # 事件推送拿到的title实际上是RichText的JSON字符串，而API调用返回的title是普通文本
     title: _T_Title
 
-    @validator("title", pre=True, allow_reuse=True)
+    @field_validator("title", mode="before")
+    @classmethod
     def parse_title(cls, v):
-        if isinstance(v, str) and cls.__fields__["title"].type_ is RichText:
-            return RichText.parse_raw(v, content_type="json")
+        if (
+            isinstance(v, str)
+            and next(f for f in model_fields(cls) if f.name == "title").annotation
+            is RichText
+        ):
+            return type_validate_python(RichText, json.loads(v))
         return v
 
 
