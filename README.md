@@ -117,3 +117,11 @@ QQ_BOTS='
 ]
 '
 ```
+
+#### 安装此Fork
+
+`pip install git+https://github.com/Ainierheokami/adapter-qq`
+
+或
+
+`pip install git+https://github.com/Ainierheokami/adapter-qq.git@add-proxy`
