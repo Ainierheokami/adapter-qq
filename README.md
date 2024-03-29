@@ -118,6 +118,11 @@ QQ_BOTS='
 '
 ```
 
+#### 2024.3 新增消息撤回
+
+`bot.delete_user_messages` `bot.delete_group_messages` `bot.delete_dms_messages` `bot.delete_channel_messages`
+
+
 #### 安装此Fork
 
 `pip install git+https://github.com/Ainierheokami/adapter-qq`

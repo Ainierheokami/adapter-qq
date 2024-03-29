@@ -1860,3 +1860,67 @@ class Bot(BaseBot):
             proxy=self.bot_info.proxy,
         )
         return parse_obj_as(PostGroupMembersReturn, await self._request(request))
+
+    # 单聊
+    @API
+    async def delete_user_messages(
+        self,
+        *,
+        user_id: str,
+        message_id: str
+    ) -> Any:
+        request = Request( # 用于撤回机器人发送给当前用户 openid 的消息 message_id，发送超出2分钟的消息不可撤回
+            "DELETE",
+            self.adapter.get_api_base().joinpath("v2", "users", user_id, "messages", message_id),
+            proxy=self.bot_info.proxy,
+        )
+        return await self._request(request)
+    
+    # 群聊
+    @API
+    async def delete_group_messages(
+        self,
+        *,
+        group_id: str,
+        message_id: str
+    ) -> Any:
+        request = Request( # 用于撤回机器人发送在当前群 group_openid 的消息 message_id，发送超出2分钟的消息不可撤回
+            "DELETE",
+            self.adapter.get_api_base().joinpath("v2", "groups", group_id, "messages", message_id),
+            proxy=self.bot_info.proxy,
+        )
+        return await self._request(request)
+    
+    # 文字子频道
+    @API
+    async def delete_channel_messages(
+        self,
+        *,
+        channel_id: str,
+        message_id: str,
+        hidetip: Optional[bool] = None
+    ) -> Any:
+        request = Request( # 用于撤回机器人发送在当前群 group_openid 的消息 message_id，发送超出2分钟的消息不可撤回
+            "DELETE",
+            self.adapter.get_api_base().joinpath("channels", channel_id, "messages", message_id),
+            json=exclude_none({"hidetip": hidetip}), # 选填，是否隐藏提示小灰条，true 为隐藏，false 为显示。默认为false
+            proxy=self.bot_info.proxy,
+        )
+        return await self._request(request)
+    
+    # 频道私信
+    @API
+    async def delete_dms_messages(
+        self,
+        *,
+        guild_id: str,
+        message_id: str,
+        hidetip: Optional[bool] = None
+    ) -> Any:
+        request = Request( # 用于撤回机器人发送在当前群 group_openid 的消息 message_id，发送超出2分钟的消息不可撤回
+            "DELETE",
+            self.adapter.get_api_base().joinpath("dms", guild_id, "messages", message_id),
+            json=exclude_none({"hidetip": hidetip}), # 选填，是否隐藏提示小灰条，true 为隐藏，false 为显示。默认为false
+            proxy=self.bot_info.proxy,
+        )
+        return await self._request(request)
