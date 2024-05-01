@@ -407,8 +407,11 @@ class Adapter(BaseAdapter):
             log("WARNING", f"Unknown payload type: {payload.type}")
             event = type_validate_python(Event, payload.data)
             event.__type__ = payload.type  # type: ignore
+            event.__id__ = payload.id  # type: ignore
             return event
-        return type_validate_python(EventClass, payload.data)
+        event = type_validate_python(EventClass, payload.data)
+        event.__id__ = payload.id  # type: ignore
+        return event
 
     @override
     async def _call_api(self, bot: Bot, api: str, **data: Any) -> Any:

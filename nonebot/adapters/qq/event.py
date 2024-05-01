@@ -116,6 +116,7 @@ class EventType(str, Enum):
 
 class Event(BaseEvent):
     __type__: EventType
+    __id__: Optional[str] = None
 
     @override
     def get_event_name(self) -> str:

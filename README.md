@@ -123,6 +123,23 @@ QQ_BOTS='
 `bot.delete_user_messages` `bot.delete_group_messages` `bot.delete_dms_messages` `bot.delete_channel_messages`
 
 
+#### 2024.5 新增回调回复
+
+```python
+@on_type(InteractionCreateEvent, block=False).handle()
+async def _(bot: Bot, event: InteractionCreateEvent):
+    # 响应回调事件
+    out = await bot.put_interaction(interaction_id=event.id, code=0)
+    logger.debug(f"响应事件：{out}")
+    if isinstance(bot, QQBot) and event.group_openid:
+        out = await bot.send_to_group(
+            group_openid=event.group_openid,
+            message="这是个回调消息",
+            event_id=event.__id__,
+            )
+        logger.debug(f"回复事件：{out}")
+```
+
 #### 安装此Fork
 
 `pip install git+https://github.com/Ainierheokami/adapter-qq`
